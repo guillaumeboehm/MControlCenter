@@ -35,3 +35,10 @@
 /build/
 /scripts/*.tar.gz
 /scripts/MControlCenter-*-bin/
+.cache/
+
+# Generated files
+src/i18n/*
+
+# Generated build files
+compile_commands.json
