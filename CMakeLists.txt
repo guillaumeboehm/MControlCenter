@@ -19,8 +19,10 @@ set(PROJECT_SOURCES
     src/mainwindow.ui
     src/mainwindow.cpp src/mainwindow.h
     src/operate.cpp src/operate.h
+    src/cli.cpp src/cli.h
     src/helper.cpp src/helper.h
     src/settings.cpp src/settings.h
+    src/options.cpp src/options.h
     src/resources.qrc
 )
 
