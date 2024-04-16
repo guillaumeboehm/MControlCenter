@@ -85,7 +85,7 @@ install(TARGETS mcontrolcenter
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(MControlCenter)
+    qt_finalize_executable(mcontrolcenter)
 endif()
 
 add_subdirectory(src/helper ${CMAKE_BINARY_DIR}/helper)
