@@ -20,11 +20,11 @@
 #include "./ui_mainwindow.h"
 #include "operate.h"
 #include "settings.h"
-#include <QTimer>
 #include <QMessageBox>
+#include <QTimer>
 
-Operate operate;
-PowerMonitor powerMonitor;
+static Operate operate;
+static PowerMonitor powerMonitor;
 
 bool isActive = false;
 bool isUpdateDataError = false;
@@ -32,120 +32,134 @@ bool isUpdateDataError = false;
 QTimer *realtimeUpdateTimer = new QTimer;
 
 MainWindow::MainWindow(QWidget *parent)
-        : QMainWindow(parent), ui(new Ui::MainWindow) {
+    : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    connect(ui->advancedFanControlCheckBox, &QCheckBox::toggled, this, &MainWindow::setFanModeAdvanced);
+    connect(ui->advancedFanControlCheckBox, &QCheckBox::toggled, this,
+            &MainWindow::setFanModeAdvanced);
 
     connect(ui->fan1Speed1Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan1Speed1Label->setText(QString("%1%").arg(ui->fan1Speed1Slider->value()));
+        ui->fan1Speed1Label->setText(
+            QString("%1%").arg(ui->fan1Speed1Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan1Speed2Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan1Speed2Label->setText(QString("%1%").arg(ui->fan1Speed2Slider->value()));
+        ui->fan1Speed2Label->setText(
+            QString("%1%").arg(ui->fan1Speed2Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan1Speed3Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan1Speed3Label->setText(QString("%1%").arg(ui->fan1Speed3Slider->value()));
+        ui->fan1Speed3Label->setText(
+            QString("%1%").arg(ui->fan1Speed3Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan1Speed4Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan1Speed4Label->setText(QString("%1%").arg(ui->fan1Speed4Slider->value()));
+        ui->fan1Speed4Label->setText(
+            QString("%1%").arg(ui->fan1Speed4Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan1Speed5Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan1Speed5Label->setText(QString("%1%").arg(ui->fan1Speed5Slider->value()));
+        ui->fan1Speed5Label->setText(
+            QString("%1%").arg(ui->fan1Speed5Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan1Speed6Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan1Speed6Label->setText(QString("%1%").arg(ui->fan1Speed6Slider->value()));
+        ui->fan1Speed6Label->setText(
+            QString("%1%").arg(ui->fan1Speed6Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan1Speed7Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan1Speed7Label->setText(QString("%1%").arg(ui->fan1Speed7Slider->value()));
+        ui->fan1Speed7Label->setText(
+            QString("%1%").arg(ui->fan1Speed7Slider->value()));
         checkFanSettingsChanged();
     });
 
     connect(ui->fan1Speed2TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        ui->fan1Speed1TempLabel->setText(QString("< %1 °C").arg(ui->fan1Speed2TempSpinBox->value()));
+        ui->fan1Speed1TempLabel->setText(
+            QString("< %1 °C").arg(ui->fan1Speed2TempSpinBox->value()));
         checkFanSettingsChanged();
     });
-    connect(ui->fan1Speed3TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
-    connect(ui->fan1Speed4TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
-    connect(ui->fan1Speed5TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
-    connect(ui->fan1Speed6TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
-    connect(ui->fan1Speed7TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
+    connect(ui->fan1Speed3TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
+    connect(ui->fan1Speed4TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
+    connect(ui->fan1Speed5TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
+    connect(ui->fan1Speed6TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
+    connect(ui->fan1Speed7TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
 
     connect(ui->fan2Speed1Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan2Speed1Label->setText(QString("%1%").arg(ui->fan2Speed1Slider->value()));
+        ui->fan2Speed1Label->setText(
+            QString("%1%").arg(ui->fan2Speed1Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan2Speed2Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan2Speed2Label->setText(QString("%1%").arg(ui->fan2Speed2Slider->value()));
+        ui->fan2Speed2Label->setText(
+            QString("%1%").arg(ui->fan2Speed2Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan2Speed3Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan2Speed3Label->setText(QString("%1%").arg(ui->fan2Speed3Slider->value()));
+        ui->fan2Speed3Label->setText(
+            QString("%1%").arg(ui->fan2Speed3Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan2Speed4Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan2Speed4Label->setText(QString("%1%").arg(ui->fan2Speed4Slider->value()));
+        ui->fan2Speed4Label->setText(
+            QString("%1%").arg(ui->fan2Speed4Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan2Speed5Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan2Speed5Label->setText(QString("%1%").arg(ui->fan2Speed5Slider->value()));
+        ui->fan2Speed5Label->setText(
+            QString("%1%").arg(ui->fan2Speed5Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan2Speed6Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan2Speed6Label->setText(QString("%1%").arg(ui->fan2Speed6Slider->value()));
+        ui->fan2Speed6Label->setText(
+            QString("%1%").arg(ui->fan2Speed6Slider->value()));
         checkFanSettingsChanged();
     });
     connect(ui->fan2Speed7Slider, &QSlider::valueChanged, this, [this]() {
-        ui->fan2Speed7Label->setText(QString("%1%").arg(ui->fan2Speed7Slider->value()));
+        ui->fan2Speed7Label->setText(
+            QString("%1%").arg(ui->fan2Speed7Slider->value()));
         checkFanSettingsChanged();
     });
 
     connect(ui->fan2Speed2TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        ui->fan2Speed1TempLabel->setText(QString("< %1 °C").arg(ui->fan2Speed2TempSpinBox->value()));
+        ui->fan2Speed1TempLabel->setText(
+            QString("< %1 °C").arg(ui->fan2Speed2TempSpinBox->value()));
         checkFanSettingsChanged();
     });
-    connect(ui->fan2Speed3TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
-    connect(ui->fan2Speed4TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
-    connect(ui->fan2Speed5TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
-    connect(ui->fan2Speed6TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
-    connect(ui->fan2Speed7TempSpinBox, &QSpinBox::textChanged, this, [this]() {
-        checkFanSettingsChanged();
-    });
+    connect(ui->fan2Speed3TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
+    connect(ui->fan2Speed4TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
+    connect(ui->fan2Speed5TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
+    connect(ui->fan2Speed6TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
+    connect(ui->fan2Speed7TempSpinBox, &QSpinBox::textChanged, this,
+            [this]() { checkFanSettingsChanged(); });
 
-    connect(ui->fanSpeedResetButton, &QPushButton::clicked, this, &MainWindow::updateFanSpeedSettings);
-    connect(ui->fanSpeedApplyButton, &QPushButton::clicked, this, &MainWindow::setFanSpeedSettings);
-    connect(&powerMonitor, &PowerMonitor::currentChargerState, this, &MainWindow::on_ChargerStateChange);
-    connect(&powerMonitor, &PowerMonitor::currentPowerProfile, this, &MainWindow::on_PowerProfileChange);
+    connect(ui->fanSpeedResetButton, &QPushButton::clicked, this,
+            &MainWindow::updateFanSpeedSettings);
+    connect(ui->fanSpeedApplyButton, &QPushButton::clicked, this,
+            &MainWindow::setFanSpeedSettings);
+    connect(&powerMonitor, &PowerMonitor::currentChargerState, this,
+            &MainWindow::on_ChargerStateChange);
+    connect(&powerMonitor, &PowerMonitor::currentPowerProfile, this,
+            &MainWindow::on_PowerProfileChange);
 
-    connect(qApp, &QGuiApplication::saveStateRequest, this, &MainWindow::saveStateRequest);
+    connect(qApp, &QGuiApplication::saveStateRequest, this,
+            &MainWindow::saveStateRequest);
 
     MainWindow::setWindowIcon(QIcon(":/images/AppIcon"));
     Settings s;
-    if (s.isValueExist("MainWindow/Width") && s.isValueExist("MainWindow/Height"))
-        MainWindow::resize(s.getValue("MainWindow/Width").toInt(), s.getValue("MainWindow/Height").toInt());
+    if (s.isValueExist("MainWindow/Width") &&
+        s.isValueExist("MainWindow/Height"))
+        MainWindow::resize(s.getValue("MainWindow/Width").toInt(),
+                           s.getValue("MainWindow/Height").toInt());
 
     createTrayIcon();
 
@@ -155,41 +169,44 @@ MainWindow::MainWindow(QWidget *parent)
     setTabsEnabled(false);
 
     if (!operate.isMsiEcLoaded()) {
-        QMessageBox::critical(nullptr, this->windowTitle(), tr("The msi-ec module is not loaded/installed.\n"
-                                                               "Check the <About> page for more info."));
+        QMessageBox::critical(nullptr, this->windowTitle(),
+                              tr("The msi-ec module is not loaded/installed.\n"
+                                 "Check the <About> page for more info."));
     }
 
     if (!operate.isEcSysModuleLoaded() && !operate.loadEcSysModule())
-        QMessageBox::critical(nullptr, this->windowTitle(), tr("The ec_sys module couldn't be detected, it might be required to control the fans."));
+        QMessageBox::critical(nullptr, this->windowTitle(),
+                              tr("The ec_sys module couldn't be detected, it "
+                                 "might be required to control the fans."));
 
-
-
-    if(operate.updateEcData())
+    if (operate.updateEcData())
         updateData();
 
-    connect(realtimeUpdateTimer, &QTimer::timeout, this, &MainWindow::realtimeUpdate);
+    connect(realtimeUpdateTimer, &QTimer::timeout, this,
+            &MainWindow::realtimeUpdate);
     setUpdateInterval(1000);
 
     // Timer to detect sleep and reapply Advanced Mode Fan if necessary
-    connect(&timerSleepWatcher, &QTimer::timeout, this, &MainWindow::timerSleepTimeout);
+    connect(&timerSleepWatcher, &QTimer::timeout, this,
+            &MainWindow::timerSleepTimeout);
     timerSleepWatcher.setInterval(10 * 1000);
     timerSleepWatcher.start();
 
     ui->QtVersionValue->setText(QT_VERSION_STR);
     ui->versionValueLabel->setText(MControlCenter_VERSION);
-    ui->autoAcDcProfilesGroupBox->setChecked(s.getValue("Settings/autoAcDcProfilesState").toBool());
-    ui->userModeOnBatteryComboBox->setCurrentIndex(s.getValue("Settings/UserModeOnBattery").toInt());
-    ui->userModeOnChargerComboBox->setCurrentIndex(s.getValue("Settings/UserModeOnCharger").toInt());
-    ui->autoPPDCheckBox->setChecked(s.getValue("Settings/autoPPDstate").toBool());
+    ui->autoAcDcProfilesGroupBox->setChecked(
+        s.getValue("Settings/autoAcDcProfilesState").toBool());
+    ui->userModeOnBatteryComboBox->setCurrentIndex(
+        s.getValue("Settings/UserModeOnBattery").toInt());
+    ui->userModeOnChargerComboBox->setCurrentIndex(
+        s.getValue("Settings/UserModeOnCharger").toInt());
+    ui->autoPPDCheckBox->setChecked(
+        s.getValue("Settings/autoPPDstate").toBool());
 }
 
-MainWindow::~MainWindow() {
-    delete ui;
-}
+MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::setUpdateDataError(bool error) {
-    isUpdateDataError = error;
-}
+void MainWindow::setUpdateDataError(bool error) { isUpdateDataError = error; }
 
 void MainWindow::setTabsEnabled(bool enabled) {
     ui->overviewTab->setEnabled(enabled);
@@ -205,13 +222,9 @@ void MainWindow::setTabsEnabled(bool enabled) {
         batteryTrayMenu->setEnabled(enabled);
 }
 
-void MainWindow::startRealtimeUpdate() const {
-    realtimeUpdateTimer->start();
-}
+void MainWindow::startRealtimeUpdate() const { realtimeUpdateTimer->start(); }
 
-void MainWindow::stopRealtimeUpdate() const {
-    realtimeUpdateTimer->stop();
-}
+void MainWindow::stopRealtimeUpdate() const { realtimeUpdateTimer->stop(); }
 
 void MainWindow::setUpdateInterval(int msec) const {
     realtimeUpdateTimer->setInterval(msec);
@@ -222,8 +235,14 @@ void MainWindow::realtimeUpdate() {
     updateData();
 }
 
+void MainWindow::externalUpdate() {
+    if (operate.updateEcData())
+        updateData();
+}
+
 void MainWindow::updateData() {
-    if (!isUpdateDataError && (operate.isMsiEcLoaded() || operate.isEcSysModuleLoaded())) {
+    if (!isUpdateDataError &&
+        (operate.isMsiEcLoaded() || operate.isEcSysModuleLoaded())) {
         if (!isActive) {
             operate.doProbe();
             setTabsEnabled(true);
@@ -239,11 +258,13 @@ void MainWindow::updateData() {
         updateFan2Speed();
         updateKeyboardBrightness();
         updateWebCamState();
+        updateCoolerBoostState();
 
         if (operate.isMsiEcLoaded()) {
             ui->MsiEcStatusLabel->setText(tr("Loaded"));
         } else {
-            ui->MsiEcStatusLabel->setText(tr("Fallback: Only ec_sys is loaded"));
+            ui->MsiEcStatusLabel->setText(
+                tr("Fallback: Only ec_sys is loaded"));
         }
     } else {
         setTabsEnabled(false);
@@ -253,8 +274,10 @@ void MainWindow::updateData() {
 }
 
 void MainWindow::loadConfigs() {
-    ui->ecVersionValueLabel->setText(QString::fromStdString(operate.getEcVersion()));
-    ui->ecBuildValueLabel->setText(QString::fromStdString(operate.getEcBuild()));
+    ui->ecVersionValueLabel->setText(
+        QString::fromStdString(operate.getEcVersion()));
+    ui->ecBuildValueLabel->setText(
+        QString::fromStdString(operate.getEcBuild()));
 
     operate.loadSettings();
     updateUserMode();
@@ -305,7 +328,8 @@ QString MainWindow::intToQString(int value) const {
 }
 
 void MainWindow::updateBatteryCharge() {
-    ui->BatteryChargeValueLabel->setText(intToQString(operate.getBatteryCharge()) + " %");
+    ui->BatteryChargeValueLabel->setText(
+        intToQString(operate.getBatteryCharge()) + " %");
 }
 
 void MainWindow::updateBatteryThreshold() {
@@ -314,25 +338,26 @@ void MainWindow::updateBatteryThreshold() {
         if (batteryThreshold == 0)
             ui->batteryThresholdValueLabel->setText("100 %");
         else
-            ui->batteryThresholdValueLabel->setText(QString::number(batteryThreshold) + " %");
+            ui->batteryThresholdValueLabel->setText(
+                QString::number(batteryThreshold) + " %");
 
         switch (batteryThreshold) {
-            case 0:
-            case 100:
-                ui->bestMobilityRadioButton->click();
-                batteryThreshold = 100;
-                break;
-            case 60:
-                ui->bestBatteryRadioButton->click();
-                break;
-            case 80:
-                ui->balancedBatteryRadioButton->click();
-                break;
-            default:
-                ui->customBatteryThresholdRadioButton->click();
-                ui->customBatteryApplyButton->setEnabled(
-                        batteryThreshold != ui->customBatteryThresholdSpinBox->value());
-                break;
+        case 0:
+        case 100:
+            ui->bestMobilityRadioButton->click();
+            batteryThreshold = 100;
+            break;
+        case 60:
+            ui->bestBatteryRadioButton->click();
+            break;
+        case 80:
+            ui->balancedBatteryRadioButton->click();
+            break;
+        default:
+            ui->customBatteryThresholdRadioButton->click();
+            ui->customBatteryApplyButton->setEnabled(
+                batteryThreshold != ui->customBatteryThresholdSpinBox->value());
+            break;
         }
 
         ui->customBatteryThresholdSpinBox->setValue(batteryThreshold);
@@ -342,21 +367,21 @@ void MainWindow::updateBatteryThreshold() {
 void MainWindow::updateChargingStatus() {
     QString chargingStatus;
     switch (operate.getChargingStatus()) {
-        case charging_state::battery_charging:
-            chargingStatus = tr("Charging");
-            break;
-        case charging_state::battery_discharging:
-            chargingStatus = tr("Discharging");
-            break;
-        case charging_state::battery_not_charging:
-            chargingStatus = tr("Not charging");
-            break;
-        case charging_state::battery_fully_charged:
-            chargingStatus = tr("Fully charged");
-            break;
-        default:
-            chargingStatus = tr("Unknown");
-            break;
+    case charging_state::battery_charging:
+        chargingStatus = tr("Charging");
+        break;
+    case charging_state::battery_discharging:
+        chargingStatus = tr("Discharging");
+        break;
+    case charging_state::battery_not_charging:
+        chargingStatus = tr("Not charging");
+        break;
+    case charging_state::battery_fully_charged:
+        chargingStatus = tr("Fully charged");
+        break;
+    default:
+        chargingStatus = tr("Unknown");
+        break;
     }
     ui->chargingStatusValueLabel->setText(chargingStatus);
 }
@@ -394,7 +419,8 @@ void MainWindow::updateFan2Speed() {
         ui->fan2ValueLabel->setVisible(true);
         ui->gpuFanLabel->setVisible(true);
         if (speed.value() != 0)
-            ui->fan2ValueLabel->setText(intToQString(speed.value()) + " " + tr("rpm"));
+            ui->fan2ValueLabel->setText(intToQString(speed.value()) + " " +
+                                        tr("rpm"));
         else
             ui->fan2ValueLabel->setText(tr("OFF"));
     } else {
@@ -404,11 +430,13 @@ void MainWindow::updateFan2Speed() {
 }
 
 void MainWindow::updateKeyboardBacklightMode() {
-    ui->keyboardBacklightModeComboBox->setCurrentIndex(operate.getKeyboardBacklightMode());
+    ui->keyboardBacklightModeComboBox->setCurrentIndex(
+        operate.getKeyboardBacklightMode());
 }
 
 void MainWindow::updateKeyboardBrightness() const {
-    ui->keyboardBrightnessSlider->setSliderPosition(operate.getKeyboardBrightness());
+    ui->keyboardBrightnessSlider->setSliderPosition(
+        operate.getKeyboardBrightness());
 }
 
 void MainWindow::updateUsbPowerShareState() {
@@ -431,36 +459,36 @@ void MainWindow::updateCoolerBoostState() const {
 void MainWindow::updateUserMode() {
     if (operate.updateEcData()) {
         switch (operate.getUserMode()) {
-            case user_mode::balanced_mode:
-                ui->balancedModeRadioButton->click();
-                balancedMode->setChecked(true);
-                break;
-            case user_mode::performance_mode:
-                ui->highPerformanceModeRadioButton->click();
-                highPerformanceMode->setChecked(true);
-                break;
-            case user_mode::silent_mode:
-                ui->silentModeRadioButton->click();
-                silentMode->setChecked(true);
-                break;
-            case user_mode::super_battery_mode:
-                ui->superBatteryModeRadioButton->click();
-                superBatteryMode->setChecked(true);
-                break;
-            case user_mode::unknown_mode:
-                //fall to default, happens on some models after booting
-            default:
-                if (!operate.isMsiEcLoaded()){
-                    ui->modeFormWidget->setDisabled(true);
-                    if (modeTrayMenu)
-                        modeTrayMenu->setDisabled(true);
-                } else {
-                    ui->superBatteryModeRadioButton->setChecked(false);
-                    ui->silentModeRadioButton->setChecked(false);
-                    ui->balancedModeRadioButton->setChecked(false);
-                    ui->highPerformanceModeRadioButton->setChecked(false);
-                }
-                break;
+        case user_mode::balanced_mode:
+            ui->balancedModeRadioButton->click();
+            balancedMode->setChecked(true);
+            break;
+        case user_mode::performance_mode:
+            ui->highPerformanceModeRadioButton->click();
+            highPerformanceMode->setChecked(true);
+            break;
+        case user_mode::silent_mode:
+            ui->silentModeRadioButton->click();
+            silentMode->setChecked(true);
+            break;
+        case user_mode::super_battery_mode:
+            ui->superBatteryModeRadioButton->click();
+            superBatteryMode->setChecked(true);
+            break;
+        case user_mode::unknown_mode:
+            // fall to default, happens on some models after booting
+        default:
+            if (!operate.isMsiEcLoaded()) {
+                ui->modeFormWidget->setDisabled(true);
+                if (modeTrayMenu)
+                    modeTrayMenu->setDisabled(true);
+            } else {
+                ui->superBatteryModeRadioButton->setChecked(false);
+                ui->silentModeRadioButton->setChecked(false);
+                ui->balancedModeRadioButton->setChecked(false);
+                ui->highPerformanceModeRadioButton->setChecked(false);
+            }
+            break;
         }
     }
 }
@@ -468,32 +496,33 @@ void MainWindow::updateUserMode() {
 void MainWindow::updateFanMode() {
     QString fanMode;
     switch (operate.getFanMode()) {
-        case fan_mode::auto_fan_mode:
-            fanMode = tr("Auto");
-            break;
-        case fan_mode::silent_fan_mode:
-            fanMode = tr("Silent");
-            break;
-        case fan_mode::basic_fan_mode:
-            fanMode = tr("Basic");
-            break;
-        case fan_mode::advanced_fan_mode:
-            fanMode = tr("Advanced");
-            break;
-        default:
-            fanMode = tr("Unknown");
-            break;
+    case fan_mode::auto_fan_mode:
+        fanMode = tr("Auto");
+        break;
+    case fan_mode::silent_fan_mode:
+        fanMode = tr("Silent");
+        break;
+    case fan_mode::basic_fan_mode:
+        fanMode = tr("Basic");
+        break;
+    case fan_mode::advanced_fan_mode:
+        fanMode = tr("Advanced");
+        break;
+    default:
+        fanMode = tr("Unknown");
+        break;
     }
     ui->fanModeValueLabel->setText(fanMode);
 }
 
 void MainWindow::updateFanSpeedSettings() {
-    ui->advancedFanControlCheckBox->setChecked(operate.getFanMode() == fan_mode::advanced_fan_mode);
+    ui->advancedFanControlCheckBox->setChecked(operate.getFanMode() ==
+                                               fan_mode::advanced_fan_mode);
 
-    QVector fan1SpeedSettings = operate.getFan1SpeedSettings();
-    QVector fan1TempSettings = operate.getFan1TempSettings();
-    QVector fan2SpeedSettings = operate.getFan2SpeedSettings();
-    QVector fan2TempSettings = operate.getFan2TempSettings();
+    QVector<int> fan1SpeedSettings = operate.getFan1SpeedSettings();
+    QVector<int> fan1TempSettings = operate.getFan1TempSettings();
+    QVector<int> fan2SpeedSettings = operate.getFan2SpeedSettings();
+    QVector<int> fan2TempSettings = operate.getFan2TempSettings();
 
     ui->fan1Speed1Slider->setValue(fan1SpeedSettings[0]);
     ui->fan1Speed2Slider->setValue(fan1SpeedSettings[1]);
@@ -503,7 +532,8 @@ void MainWindow::updateFanSpeedSettings() {
     ui->fan1Speed6Slider->setValue(fan1SpeedSettings[5]);
     ui->fan1Speed7Slider->setValue(fan1SpeedSettings[6]);
 
-    ui->fan1Speed1TempLabel->setText(QString("< %1 °C").arg(fan1TempSettings[0]));
+    ui->fan1Speed1TempLabel->setText(
+        QString("< %1 °C").arg(fan1TempSettings[0]));
     ui->fan1Speed2TempSpinBox->setValue(fan1TempSettings[0]);
     ui->fan1Speed3TempSpinBox->setValue(fan1TempSettings[1]);
     ui->fan1Speed4TempSpinBox->setValue(fan1TempSettings[2]);
@@ -519,7 +549,8 @@ void MainWindow::updateFanSpeedSettings() {
     ui->fan2Speed6Slider->setValue(fan2SpeedSettings[5]);
     ui->fan2Speed7Slider->setValue(fan2SpeedSettings[6]);
 
-    ui->fan2Speed1TempLabel->setText(QString("< %1 °C").arg(fan2TempSettings[0]));
+    ui->fan2Speed1TempLabel->setText(
+        QString("< %1 °C").arg(fan2TempSettings[0]));
     ui->fan2Speed2TempSpinBox->setValue(fan2TempSettings[0]);
     ui->fan2Speed3TempSpinBox->setValue(fan2TempSettings[1]);
     ui->fan2Speed4TempSpinBox->setValue(fan2TempSettings[2]);
@@ -642,10 +673,11 @@ void MainWindow::setFanModeAdvanced(bool enabled) const {
 }
 
 void MainWindow::checkFanSettingsChanged() const {
-    bool fanSettingChanged = (getFan1SpeedValues() != operate.getFan1SpeedSettings() ||
-                              getFan2SpeedValues() != operate.getFan2SpeedSettings() ||
-                              getFan1TempValues() != operate.getFan1TempSettings() ||
-                              getFan2TempValues() != operate.getFan2TempSettings());
+    bool fanSettingChanged =
+        (getFan1SpeedValues() != operate.getFan1SpeedSettings() ||
+         getFan2SpeedValues() != operate.getFan2SpeedSettings() ||
+         getFan1TempValues() != operate.getFan1TempSettings() ||
+         getFan2TempValues() != operate.getFan2TempSettings());
     ui->fanSpeedApplyButton->setEnabled(fanSettingChanged);
     ui->fanSpeedResetButton->setEnabled(fanSettingChanged);
 }
@@ -669,7 +701,7 @@ void MainWindow::quitApp() const {
     operate.closeHelperApp();
     Settings::setValue("MainWindow/Width", MainWindow::width());
     Settings::setValue("MainWindow/Height", MainWindow::height());
-    (void) QCoreApplication::quit();
+    (void)QCoreApplication::quit();
 }
 
 void MainWindow::timerSleepTimeout() {
@@ -708,11 +740,15 @@ void MainWindow::setModeFromSelection(PowerProfile profile) {
 void MainWindow::on_ChargerStateChange(bool isCharging) {
     if (ui->autoAcDcProfilesGroupBox->isChecked()) {
         Settings s;
-        int SelectedModeOnBattery = s.getValue("Settings/UserModeOnBattery").toInt();
-        int SelectedModeOnCharger = s.getValue("Settings/UserModeOnCharger").toInt();
+        int SelectedModeOnBattery =
+            s.getValue("Settings/UserModeOnBattery").toInt();
+        int SelectedModeOnCharger =
+            s.getValue("Settings/UserModeOnCharger").toInt();
 
-        PowerProfile batteryProfile = static_cast<PowerProfile>(SelectedModeOnBattery);
-        PowerProfile chargerProfile = static_cast<PowerProfile>(SelectedModeOnCharger);
+        PowerProfile batteryProfile =
+            static_cast<PowerProfile>(SelectedModeOnBattery);
+        PowerProfile chargerProfile =
+            static_cast<PowerProfile>(SelectedModeOnCharger);
 
         if (isCharging) {
             setModeFromSelection(chargerProfile);
@@ -740,7 +776,7 @@ void MainWindow::on_PowerProfileChange(const PowerProfile profile) {
             ui->superBatteryModeRadioButton->setChecked(true);
             break;
         case PowerProfile::Unknown:
-            default:;
+        default:;
         }
     }
 }
@@ -771,7 +807,8 @@ void MainWindow::on_customBatteryThresholdRadioButton_toggled(bool checked) {
 
 void MainWindow::on_customBatteryThresholdSpinBox_valueChanged(int arg1) {
     ui->customBatteryApplyButton->setEnabled(
-            ui->customBatteryThresholdRadioButton->isChecked() && operate.getBatteryThreshold() != arg1);
+        ui->customBatteryThresholdRadioButton->isChecked() &&
+        operate.getBatteryThreshold() != arg1);
 }
 
 void MainWindow::on_customBatteryApplyButton_clicked() {
@@ -818,25 +855,31 @@ void MainWindow::on_keyboardBrightnessSlider_valueChanged(int value) const {
     }
 }
 
-void MainWindow::on_keyboardBacklightModeComboBox_currentIndexChanged(int index) const {
+void MainWindow::on_keyboardBacklightModeComboBox_currentIndexChanged(
+    int index) const {
     operate.setKeyboardBacklightMode(index);
 }
 
-void MainWindow::on_userModeOnBatteryComboBox_currentIndexChanged(int index) const {
+void MainWindow::on_userModeOnBatteryComboBox_currentIndexChanged(
+    int index) const {
     Settings::setValue("Settings/UserModeOnBattery", index);
     powerMonitor.queryChargerState();
 }
 
-void MainWindow::on_userModeOnChargerComboBox_currentIndexChanged(int index) const {
+void MainWindow::on_userModeOnChargerComboBox_currentIndexChanged(
+    int index) const {
     Settings::setValue("Settings/UserModeOnCharger", index);
     powerMonitor.queryChargerState();
 }
 
 void MainWindow::on_autoAcDcProfilesGroupBox_toggled(bool checked) {
-    if(checked) {
+    if (checked) {
         if (!powerMonitor.connectToUpower()) {
-            QMessageBox::critical(nullptr, this->windowTitle(), tr("Couldn't connect to UPower to get charger status.\n"
-                                                                   "Make sure that UPower is installed and running then restart the system."));
+            QMessageBox::critical(
+                nullptr, this->windowTitle(),
+                tr("Couldn't connect to UPower to get charger status.\n"
+                   "Make sure that UPower is installed and running then "
+                   "restart the system."));
             ui->autoAcDcProfilesGroupBox->setChecked(0);
             ui->autoAcDcProfilesGroupBox->setEnabled(0);
             return;
@@ -858,8 +901,11 @@ void MainWindow::on_autoPPDCheckBox_toggled(bool checked) {
     if (checked) {
 
         if (!powerMonitor.connectToPowerProfiles()) {
-            QMessageBox::critical(nullptr, this->windowTitle(), tr("Couldn't connect to Power Profiles Daemon.\n"
-                                                                   "Make sure that either Power Profiles Daemon or TuneD is installed and restart the system."));
+            QMessageBox::critical(
+                nullptr, this->windowTitle(),
+                tr("Couldn't connect to Power Profiles Daemon.\n"
+                   "Make sure that either Power Profiles Daemon or TuneD is "
+                   "installed and restart the system."));
             ui->autoPPDCheckBox->setChecked(0);
             return;
         }
@@ -904,17 +950,17 @@ void MainWindow::on_superBatteryModeRadioButton_toggled(bool checked) {
 
 void MainWindow::iconActivated(QSystemTrayIcon::ActivationReason reason) {
     switch (reason) {
-        case QSystemTrayIcon::Trigger:
-        case QSystemTrayIcon::DoubleClick:
-            if (!MainWindow::isHidden()) {
-                MainWindow::close();
-            } else {
-                MainWindow::showNormal();
-            }
-            break;
-        case QSystemTrayIcon::MiddleClick:
-            break;
-        default:;
+    case QSystemTrayIcon::Trigger:
+    case QSystemTrayIcon::DoubleClick:
+        if (!MainWindow::isHidden()) {
+            MainWindow::close();
+        } else {
+            MainWindow::showNormal();
+        }
+        break;
+    case QSystemTrayIcon::MiddleClick:
+        break;
+    default:;
     }
 }
 
@@ -924,7 +970,6 @@ void MainWindow::createTrayIcon() {
     modeTrayMenu = new QMenu(tr("Mode"));
     modeTrayActions = new QActionGroup(this);
     modeTrayActions->setExclusive(true);
-
 
     modeTrayActions->addAction(highPerformanceMode);
     modeTrayActions->addAction(balancedMode);
@@ -961,14 +1006,16 @@ void MainWindow::createTrayIcon() {
 
     trayIcon->show();
 
-    connect(trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::iconActivated);
+    connect(trayIcon, &QSystemTrayIcon::activated, this,
+            &MainWindow::iconActivated);
 }
 
 void MainWindow::createActions() {
     restoreAction = new QAction(tr("Show"), this);
     connect(restoreAction, &QAction::triggered, this, &MainWindow::showNormal);
 
-    highPerformanceMode = new QAction(ui->highPerformanceModeRadioButton->text(), this);
+    highPerformanceMode =
+        new QAction(ui->highPerformanceModeRadioButton->text(), this);
     highPerformanceMode->setCheckable(true);
 
     balancedMode = new QAction(ui->balancedModeRadioButton->text(), this);
@@ -977,26 +1024,37 @@ void MainWindow::createActions() {
     silentMode = new QAction(ui->silentModeRadioButton->text(), this);
     silentMode->setCheckable(true);
 
-    superBatteryMode = new QAction(ui->superBatteryModeRadioButton->text(), this);
+    superBatteryMode =
+        new QAction(ui->superBatteryModeRadioButton->text(), this);
     superBatteryMode->setCheckable(true);
 
-    connect(highPerformanceMode, &QAction::triggered, this, &MainWindow::setHighPerformanceMode);
-    connect(balancedMode, &QAction::triggered, this, &MainWindow::setBalancedMode);
+    connect(highPerformanceMode, &QAction::triggered, this,
+            &MainWindow::setHighPerformanceMode);
+    connect(balancedMode, &QAction::triggered, this,
+            &MainWindow::setBalancedMode);
     connect(silentMode, &QAction::triggered, this, &MainWindow::setSilentMode);
-    connect(superBatteryMode, &QAction::triggered, this, &MainWindow::setSuperBatteryMode);
+    connect(superBatteryMode, &QAction::triggered, this,
+            &MainWindow::setSuperBatteryMode);
 
     coolerBoostAction = new QAction(tr("Cooler Boost"), this);
     coolerBoostAction->setCheckable(true);
 
-    connect(coolerBoostAction, &QAction::triggered, this, &MainWindow::setCoolerBoostState);
+    connect(coolerBoostAction, &QAction::triggered, this,
+            &MainWindow::setCoolerBoostState);
 
-    bestMobilityAction = new QAction(ui->bestMobilityRadioButton->text() + " (100%)", this);
-    balancedBatteryAction = new QAction(ui->balancedBatteryRadioButton->text() + " (80%)", this);
-    bestBatteryAction = new QAction(ui->bestBatteryRadioButton->text() + " (60%)", this);
+    bestMobilityAction =
+        new QAction(ui->bestMobilityRadioButton->text() + " (100%)", this);
+    balancedBatteryAction =
+        new QAction(ui->balancedBatteryRadioButton->text() + " (80%)", this);
+    bestBatteryAction =
+        new QAction(ui->bestBatteryRadioButton->text() + " (60%)", this);
 
-    connect(bestMobilityAction, &QAction::triggered, this, &MainWindow::setBestMobility);
-    connect(balancedBatteryAction, &QAction::triggered, this, &MainWindow::setBalancedBattery);
-    connect(bestBatteryAction, &QAction::triggered, this, &MainWindow::setBestBattery);
+    connect(bestMobilityAction, &QAction::triggered, this,
+            &MainWindow::setBestMobility);
+    connect(balancedBatteryAction, &QAction::triggered, this,
+            &MainWindow::setBalancedBattery);
+    connect(bestBatteryAction, &QAction::triggered, this,
+            &MainWindow::setBestBattery);
 
     quitAction = new QAction(tr("Quit"), this);
     connect(quitAction, &QAction::triggered, this, &MainWindow::quitApp);

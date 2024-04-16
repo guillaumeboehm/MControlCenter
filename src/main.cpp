@@ -16,16 +16,42 @@
  * with MControlCenter. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#include "cli.h"
 #include "mainwindow.h"
+#include "options.h"
+
 #include <QApplication>
-#include <QTranslator>
 #include <QDBusConnectionInterface>
+#include <QTranslator>
 
 int main(int argc, char *argv[]) {
     const QString serviceName = "io.github.dmitry_s93.MControlCenter";
 
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(serviceName)) {
-        fprintf(stderr, "Another instance of the application is already running\n");
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(
+            serviceName)) {
+
+        // TODO: If we used commands -> communicate through dbus
+        Options options;
+        options.process_args(argc, argv);
+
+        if (options.cli) {
+            fprintf(stderr, "Executing CLI commands...\n");
+            CLI cli;
+            if (options.cooler_boost.has_value()) {
+                cli.setCoolerBoost(options.cooler_boost.value());
+            }
+
+            if (socket->isOpen()) {
+                socket->write("update");
+                socket->flush();
+                socket->close();
+            }
+            socket->deleteLater();
+            return 0;
+        } else {
+            fprintf(stderr,
+                    "Another instance of the application is already running\n");
+        }
         return 0;
     }
 
@@ -38,7 +64,7 @@ int main(int argc, char *argv[]) {
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
-    for (const QString &locale: uiLanguages) {
+    for (const QString &locale : uiLanguages) {
         const QString baseName = "lang_" + QLocale(locale).name();
         if (translator.load(":/translations/" + baseName)) {
             QApplication::installTranslator(&translator);
@@ -48,5 +74,16 @@ int main(int argc, char *argv[]) {
 
     MainWindow w;
 
+    // QObject::connect(&server, &QLocalServer::newConnection, [&w, &server]() {
+    //     QLocalSocket *socket = server.nextPendingConnection();
+    //     if (socket->waitForConnected() && socket->waitForReadyRead()) {
+    //         QByteArray data = socket->readAll();
+    //         if (std::strcmp(data.data(), "show") == 0) {
+    //             w.show();
+    //         } else if (std::strcmp(data.data(), "update") == 0) {
+    //             w.externalUpdate();
+    //         }
+    //     }
+    // });
     return QApplication::exec();
 }
