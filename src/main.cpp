@@ -27,34 +27,28 @@
 int main(int argc, char *argv[]) {
     const QString serviceName = "io.github.dmitry_s93.MControlCenter";
 
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(
-            serviceName)) {
+    Operate operate;
+    PowerMonitor powerMonitor;
 
-        // TODO: If we used commands -> communicate through dbus
-        Options options;
-        options.process_args(argc, argv);
+    Options options;
+    options.process_args(argc, argv);
 
-        if (options.cli) {
-            fprintf(stderr, "Executing CLI commands...\n");
-            CLI cli;
-            if (options.cooler_boost.has_value()) {
-                cli.setCoolerBoost(options.cooler_boost.value());
-            }
-            if (options.user_mode.has_value()) {
-                cli.changeUserMode(options.user_mode.value());
-            }
+    if (options.cli) {
+        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(
+                serviceName)) {
 
-            if (socket->isOpen()) {
-                socket->write("update");
-                socket->flush();
-                socket->close();
-            }
-            socket->deleteLater();
-            return 0;
+            CLI cli(std::move(operate), std::move(options));
+            return cli.execute();
         } else {
-            fprintf(stderr,
-                    "Another instance of the application is already running\n");
+            fprintf(
+                stderr,
+                "The main application needs to be running to use the cli.\n");
+            return 1;
         }
+    } else if (QDBusConnection::sessionBus().interface()->isServiceRegistered(
+                   serviceName)) {
+        fprintf(stderr,
+                "Another instance of the application is already running\n");
         return 0;
     }
 
@@ -75,18 +69,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    MainWindow w;
+    MainWindow w(std::move(operate), std::move(powerMonitor));
 
-    // QObject::connect(&server, &QLocalServer::newConnection, [&w, &server]() {
-    //     QLocalSocket *socket = server.nextPendingConnection();
-    //     if (socket->waitForConnected() && socket->waitForReadyRead()) {
-    //         QByteArray data = socket->readAll();
-    //         if (std::strcmp(data.data(), "show") == 0) {
-    //             w.show();
-    //         } else if (std::strcmp(data.data(), "update") == 0) {
-    //             w.externalUpdate();
-    //         }
-    //     }
-    // });
     return QApplication::exec();
 }

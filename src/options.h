@@ -23,18 +23,14 @@
 #include <optional>
 #include <string>
 
-class Options{
-public:
+class Options {
+  public:
     Options();
     ~Options() = default;
 
-    enum State {
-        OFF = 0,
-        ON = 1,
-        TOGGLE = 2
-    };
+    enum CoolerBoostState { OFF = 0, ON = 1, TOGGLE = 2 };
 
-    enum Mode {
+    enum UserMode {
         PERFORMANCE = 0,
         BALANCED = 1,
         SILENT = 2,
@@ -43,19 +39,18 @@ public:
     };
 
     bool cli;
-    std::optional<State> cooler_boost;
-    std::optional<Mode> user_mode;
+    std::optional<CoolerBoostState> cooler_boost;
+    std::optional<UserMode> user_mode;
 
-    void process_args(int argc, char** argv);
+    void process_args(int argc, char **argv);
 
-private:
+  private:
     static constexpr std::string_view const short_opts = "B:M:h";
     static constexpr option long_opts[] = {
         {"coolerboost", required_argument, nullptr, 'B'},
-        {"usermode",    required_argument, nullptr, 'M'},
-        {"help",        no_argument,       nullptr, 'h'},
-        {nullptr,       no_argument,       nullptr, 0}
-    };
+        {"usermode", required_argument, nullptr, 'M'},
+        {"help", no_argument, nullptr, 'h'},
+        {nullptr, no_argument, nullptr, 0}};
 
     void print_help(std::string program_name);
 };

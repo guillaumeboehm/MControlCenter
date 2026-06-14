@@ -19,28 +19,32 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "operate.h"
 #include "powermonitor.h"
-#include <QMainWindow>
 #include <QCloseEvent>
+#include <QDBusPendingCallWatcher>
+#include <QMainWindow>
 #include <QSystemTrayIcon>
 #include <QtWidgets>
-#include <QDBusPendingCallWatcher>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui {
+class MainWindow;
+}
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow {
-Q_OBJECT
+    Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
+  public:
+    explicit MainWindow(Operate &&operate, PowerMonitor &&powerMonitor,
+                        QWidget *parent = nullptr);
     ~MainWindow();
     void externalUpdate();
     void updateData();
     static void setUpdateDataError(bool error);
 
-private:
+  private:
     Ui::MainWindow *ui;
 
     void setTabsEnabled(bool enabled);
@@ -101,7 +105,11 @@ private:
     void iconActivated(QSystemTrayIcon::ActivationReason reason);
     void saveStateRequest(QSessionManager &sessionManager);
 
-    QSystemTrayIcon *trayIcon = nullptr;;
+    Operate &operate;
+    PowerMonitor &powerMonitor;
+
+    QSystemTrayIcon *trayIcon = nullptr;
+    ;
     QMenu *trayIconMenu = nullptr;
     QMenu *modeTrayMenu = nullptr;
     QMenu *fanTrayMenu = nullptr;
@@ -122,7 +130,7 @@ private:
     QAction *restoreAction = nullptr;
     QAction *quitAction = nullptr;
 
-private slots:
+  private slots:
     void on_ChargerStateChange(bool isCharging);
     void on_PowerProfileChange(const PowerProfile profile);
 

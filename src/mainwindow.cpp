@@ -18,21 +18,19 @@
 
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "operate.h"
 #include "settings.h"
 #include <QMessageBox>
 #include <QTimer>
-
-static Operate operate;
-static PowerMonitor powerMonitor;
 
 bool isActive = false;
 bool isUpdateDataError = false;
 
 QTimer *realtimeUpdateTimer = new QTimer;
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow) {
+MainWindow::MainWindow(Operate &&operate, PowerMonitor &&powerMonitor,
+                       QWidget *parent)
+    : operate(operate), powerMonitor(powerMonitor), QMainWindow(parent),
+      ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
     connect(ui->advancedFanControlCheckBox, &QCheckBox::toggled, this,
